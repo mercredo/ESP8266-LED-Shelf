@@ -17,8 +17,8 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 //IP config
-IPAddress ip(192,168,1,52);     //Device IP
-IPAddress gateway(192,168,1,1); //IP of router
+IPAddress ip(192,168,178,77);     //Device IP
+IPAddress gateway(192,168,178,1); //IP of router
 IPAddress subnet(255,255,255,0);
 IPAddress primaryDNS(8,8,8,8);
 IPAddress secondaryDNS(8,8,4,4);
