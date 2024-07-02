@@ -278,7 +278,9 @@ void setupServer(){
     webServer.send(200, "text/plain", "1");
   });
   webServer.on("/countdown", HTTP_GET, []() {
-    startCountdown(webServer.arg("seconds").toInt()%1200); // 1200 seconds as max value for 12 hour clock
+    startCountdown((int)(webServer.arg("seconds").toInt())%1200);
+
+    // Serial.printf("\nStarting countdown via webserver with %d seconds", (int)(webServer.arg("seconds").toInt())%1200);
     
     lastUpdate = 0;
     updateSettings = true;

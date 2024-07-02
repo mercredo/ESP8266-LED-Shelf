@@ -217,44 +217,44 @@ void showLightingEffects() {
         break;
     }
 
-    if (clockRefreshTimer % FRAMES_PER_SECOND == 0) {
-      Serial.printf("\rMod %d minutes and %d seconds", getMinute(), getSecond());
-    }
+    // if (clockRefreshTimer % FRAMES_PER_SECOND == 0) {
+    //   Serial.printf("\rMod %d minutes and %d seconds", getMinute(), getSecond());
+    // }
 
     /**
      * Render clock time and LED patterns
      */
-    if (!isCountdownActive()) {
-      render_clock();
-    } else {
-      render_clock_countdown();
-    }
+    // if (!isCountdownActive()) {
+    //   render_clock();
+    // } else {
+    //   render_clock_countdown();
+    // }
     
     // Update ntp time every 30 seconds
-    if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-    clockRefreshTimer++;
+    // if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+    // clockRefreshTimer++;
 
-    // //Foreground
-    // switch (foregroundPattern) {
-    //   case 0:
-    //     break;//do nothing. Just here to acknowledge this option exists
-    //   case 1: //solid
-    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-    //     render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
-    //     clockRefreshTimer++;
-    //     // Serial.printf("\rAha %s:%s", getMinute(), getSecond());
-    //     break;
-    //   case 2: //rainbow
-    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-    //     render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
-    //     clockRefreshTimer++;
-    //     break;
-    //   case 3: //gradient
-    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-    //     render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
-    //     clockRefreshTimer++;
-    //     break;
-    // }
+    //Foreground
+    switch (foregroundPattern) {
+      case 0:
+        break;//do nothing. Just here to acknowledge this option exists
+      case 1: //solid
+        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+        render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
+        clockRefreshTimer++;
+        // Serial.printf("\rAha %s:%s", getMinute(), getSecond());
+        break;
+      case 2: //rainbow
+        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+        render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
+        clockRefreshTimer++;
+        break;
+      case 3: //gradient
+        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+        render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
+        clockRefreshTimer++;
+        break;
+    }
   }
 
   //Hyphen segment if enabled
@@ -351,13 +351,13 @@ void render_clock() {
       render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
       break;  
     default:
-      Serial.printf("Invalid LED clock rendering pattern.");
+      Serial.println("Invalid LED clock rendering pattern.");
       break;
   }
 }
 void render_clock_countdown() {
-  if (countdownSecondsLeft < 0) {Serial.printf("Countdown expired.");return;};
-  if (countdownSecondsLeft > 1200) {Serial.printf("Countdown too large to display in seconds.");return;};
+  if (countdownSecondsLeft < 0) {Serial.println("Countdown expired.");return;};
+  if (countdownSecondsLeft > 1200) {Serial.println("Countdown too large to display in seconds.");return;};
 
   // switch (foregroundPattern) {
   //   case 1:
@@ -370,7 +370,7 @@ void render_clock_countdown() {
   //     render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
   //     break;  
   //   default:
-  //     Serial.printf("Invalid LED clock rendering pattern.");
+  //     Serial.println("Invalid LED clock rendering pattern.");
   //     break;
   // }
 }

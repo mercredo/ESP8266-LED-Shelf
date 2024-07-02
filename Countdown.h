@@ -1,7 +1,6 @@
 #ifndef COUNTDOWN_H
 #define COUNTDOWN_H
 
-//#include <FastLED.h>
 #include "Config.h"
 
 extern int32_t countdownSecondsLeft;
