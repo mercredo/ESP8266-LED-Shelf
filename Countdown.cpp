@@ -2,23 +2,24 @@
 #include "Config.h"
 
 int32_t countdownSecondsLeft = -1;
+int32_t countdownBuffer = -1;
 
 void startCountdown(int seconds) {
   if (countdownSecondsLeft > -1) return; // skip on active
   if (seconds < 0) return;
 
-  // Serial.printf("Starting countdown with %d seconds", seconds);
-
   countdownSecondsLeft = seconds;
+  countdownBuffer = seconds * FRAMES_PER_SECOND;
 
   Serial.printf("\rStarting countdown with %d seconds", countdownSecondsLeft);
 
-  delay(1000);
-  
-  while (countdownSecondsLeft > -1) {
-    Serial.printf("\rCountdown - Time remaining: %d seconds", countdownSecondsLeft);
-    delay(1000);
-    countdownSecondsLeft--;
+  while(countdownBuffer > 0) {
+    countdownBuffer--;
+
+    if ((countdownBuffer % FRAMES_PER_SECOND) == 0) {
+      countdownSecondsLeft--;
+      Serial.printf("\rCountdown - Time remaining: %d seconds", countdownSecondsLeft);
+    }
   }
 
   Serial.printf("\rCountdown stopped");

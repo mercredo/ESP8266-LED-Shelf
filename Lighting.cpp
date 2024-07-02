@@ -361,7 +361,7 @@ void render_clock_countdown() {
 
   // switch (foregroundPattern) {
   //   case 1:
-      render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
+      render_clock_to_display((countdownSecondsLeft-(countdownSecondsLeft%60))/60, countdownSecondsLeft%60, 255 - segmentBrightness);
       // break;
   //   case 2:
   //     render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
