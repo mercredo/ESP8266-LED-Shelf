@@ -5,6 +5,7 @@
 #include "Lighting.h"
 #include "NTPTime.h"
 #include "Backlight.h"
+#include "Countdown.h"
 
 ESP8266WebServer webServer(80);
 
@@ -274,6 +275,13 @@ void setupServer(){
   webServer.on("/utcoffset", HTTP_GET, []() {
     storeUtcOffset(webServer.arg("value").toDouble());
     setNewOffset();
+    webServer.send(200, "text/plain", "1");
+  });
+  webServer.on("/countdown", HTTP_GET, []() {
+    startCountdown(webServer.arg("seconds").toInt()%1200); // 1200 seconds as max value for 12 hour clock
+    
+    lastUpdate = 0;
+    updateSettings = true;
     webServer.send(200, "text/plain", "1");
   });
    

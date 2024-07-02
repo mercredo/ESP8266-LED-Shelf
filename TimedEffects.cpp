@@ -200,29 +200,17 @@ void setSegmentEffect(byte effect, CRGB c1, CRGB c2, CRGB c3, CRGB c4){
       case 0: break;//do nothing. Just here to acknowledge this option exists
       case 1: //solid
         if (clockRefreshTimer == FRAMES_PER_SECOND * 3) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display(getHour12(), getMinute(), 255 - segBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display(getHour24(), getMinute(), 255 - segBrightness);
-        #endif
+        render_clock_to_display(getHour(), getMinute(), 255 - segBrightness);
         clockRefreshTimer++;
         break;
       case 2: //rainbow
         if (clockRefreshTimer == FRAMES_PER_SECOND * 3) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display_rainbow(getHour12(), getMinute(), 255 - segBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display_rainbow(getHour24(), getMinute(), 255 - segBrightness);
-        #endif
+        render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segBrightness);
         clockRefreshTimer++;
         break;
       case 3: //gradient
         if (clockRefreshTimer == FRAMES_PER_SECOND * 3) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display_gradient(getHour12(), getMinute(), 255 - segBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display_gradient(getHour24(), getMinute(), 255 - segBrightness);
-        #endif
+        render_clock_to_display_gradient(getHour(), getMinute(), 255 - segBrightness);
         clockRefreshTimer++;
         break;
     }

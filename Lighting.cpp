@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "NTPTime.h"
 #include "TimedEffects.h"
+#include "Countdown.h"
 
 CRGB off_color = CRGB::Black;
 CRGB *leds = new CRGB[NUM_LEDS+1]; //array that gets rendered, +1 for sacrifice LED in case its needed
@@ -215,39 +216,47 @@ void showLightingEffects() {
         dimSpotlights(50);
         break;
     }
-    //Foreground
-    switch (foregroundPattern) {
-      case 0:
-        break;//do nothing. Just here to acknowledge this option exists
-      case 1: //solid
-        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display(getHour12(), getMinute(), 255 - segmentBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display(getHour24(), getMinute(), 255 - segmentBrightness);
-        #endif
-        clockRefreshTimer++;
-        break;
-      case 2: //rainbow
-        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display_rainbow(getHour12(), getMinute(), 255 - segmentBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display_rainbow(getHour24(), getMinute(), 255 - segmentBrightness);
-        #endif
-        clockRefreshTimer++;
-        break;
-      case 3: //gradient
-        if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
-        #ifdef _12_HR_CLOCK
-        render_clock_to_display_gradient(getHour12(), getMinute(), 255 - segmentBrightness);
-        #elif defined(_24_HR_CLOCK)
-        render_clock_to_display_gradient(getHour24(), getMinute(), 255 - segmentBrightness);
-        #endif
-        clockRefreshTimer++;
-        break;
+
+    if (clockRefreshTimer % FRAMES_PER_SECOND == 0) {
+      Serial.printf("\rMod %d minutes and %d seconds", getMinute(), getSecond());
     }
+
+    /**
+     * Render clock time and LED patterns
+     */
+    if (!isCountdownActive()) {
+      render_clock();
+    } else {
+      render_clock_countdown();
+    }
+    
+    // Update ntp time every 30 seconds
+    if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+    clockRefreshTimer++;
+
+    // //Foreground
+    // switch (foregroundPattern) {
+    //   case 0:
+    //     break;//do nothing. Just here to acknowledge this option exists
+    //   case 1: //solid
+    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+    //     render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
+    //     clockRefreshTimer++;
+    //     // Serial.printf("\rAha %s:%s", getMinute(), getSecond());
+    //     break;
+    //   case 2: //rainbow
+    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+    //     render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
+    //     clockRefreshTimer++;
+    //     break;
+    //   case 3: //gradient
+    //     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
+    //     render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
+    //     clockRefreshTimer++;
+    //     break;
+    // }
   }
+
   //Hyphen segment if enabled
   if(hyphenColor.r != 0 || hyphenColor.g != 0 || hyphenColor.b != 0){
     strip seg = segmentToLedIndex(hyphenSegment);
@@ -329,6 +338,42 @@ void dimSegment(int segment, byte val) {
 //                  Clock Effects                 //
 //************************************************//
 //Adds the clock colour data into the leds[] array
+void render_clock() {
+
+  switch (foregroundPattern) {
+    case 1:
+      render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
+      break;
+    case 2:
+      render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
+      break;
+    case 3:
+      render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
+      break;  
+    default:
+      Serial.printf("Invalid LED clock rendering pattern.");
+      break;
+  }
+}
+void render_clock_countdown() {
+  if (countdownSecondsLeft < 0) {Serial.printf("Countdown expired.");return;};
+  if (countdownSecondsLeft > 1200) {Serial.printf("Countdown too large to display in seconds.");return;};
+
+  // switch (foregroundPattern) {
+  //   case 1:
+      render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
+      // break;
+  //   case 2:
+  //     render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
+  //     break;
+  //   case 3:
+  //     render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
+  //     break;  
+  //   default:
+  //     Serial.printf("Invalid LED clock rendering pattern.");
+  //     break;
+  // }
+}
 void render_clock_to_display(int h, int m) {render_clock_to_display(h, m, 0);}
 void render_clock_to_display(int h, int m, byte dim) {
   const uint8_t light_tens_h = sevenSegment(h / 10);

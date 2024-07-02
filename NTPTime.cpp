@@ -10,15 +10,15 @@
 
 double utcOffset;
 
-const String deviceName = "ledshelf";
+const String deviceName = "ledshelf-test";
 
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 //IP config
-IPAddress ip(192,168,1,52);     //Device IP
-IPAddress gateway(192,168,1,1); //IP of router
+IPAddress ip(192,168,178,88);     //Device IP
+IPAddress gateway(192,168,178,1); //IP of router
 IPAddress subnet(255,255,255,0);
 IPAddress primaryDNS(8,8,8,8);
 IPAddress secondaryDNS(8,8,4,4);
@@ -59,6 +59,13 @@ void setupWiFi(){
 void updateTime(){timeClient.update();}
 void setNewOffset(){timeClient.setTimeOffset((int)(utcOffset*3600));}
 double getOffset(){return utcOffset;}
+int getHour(){
+  #ifdef _24_HR_CLOCK
+    return getHour24();
+  #endif
+
+  return getHour12();
+}
 int getHour12(){return ((timeClient.getHours()%12 + 12*(timeClient.getHours()%12==0)));} //branchess formula to get 12 to display, but cycle back to 1 in a 12hr format instead of displaying 0 when it is 12am/pm
 int getHour24(){return (timeClient.getHours());}
 int getMinute(){return (timeClient.getMinutes());}

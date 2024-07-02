@@ -7,6 +7,7 @@ void initClock();
 void updateTime();
 void setNewOffset();
 double getOffset();
+int getHour();
 int getHour12();
 int getHour24();
 int getMinute();

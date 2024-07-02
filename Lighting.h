@@ -78,6 +78,8 @@ void dimSegment(int segment, byte val);
 void showLightingEffects();
 
 //Clock
+void render_clock();
+void render_clock_countdown();
 void render_clock_to_display(int h, int m);
 void render_clock_to_display(int h, int m, byte dim);
 void render_clock_to_display_rainbow(int h, int m);
