@@ -10,14 +10,14 @@
 
 double utcOffset;
 
-const String deviceName = "ledshelf-test";
+const String deviceName = "ledshelf";
 
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 //IP config
-IPAddress ip(192,168,178,88);     //Device IP
+IPAddress ip(192,168,178,77);     //Device IP
 IPAddress gateway(192,168,178,1); //IP of router
 IPAddress subnet(255,255,255,0);
 IPAddress primaryDNS(8,8,8,8);
