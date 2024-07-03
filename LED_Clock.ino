@@ -11,7 +11,12 @@ unsigned long frameStart; //For fps counter
 
 void setup(){
   Serial.begin(115200);
+  
   pinMode(LIGHT_SENSOR,INPUT);
+  #ifdef LIGHT_SENSOR_INVERT
+  digitalWrite(LIGHT_SENSOR, HIGH);
+  #endif
+
   Serial.println("\n\n\n\n\n"); //get rid of the jiberish from boot
   random16_add_entropy((uint16_t)random16());
   for(int i=0;i<10;i++) random16_add_entropy(random(65535));
