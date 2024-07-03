@@ -279,12 +279,16 @@ void setupServer(){
   });
   webServer.on("/countdown", HTTP_GET, []() {
     countdown.start(((webServer.arg("seconds").toInt())%1200)*1000);
-
-    // Serial.printf("\nStarting countdown via webserver with %d seconds", (int)(webServer.arg("seconds").toInt())%1200);
     
     lastUpdate = 0;
     updateSettings = true;
     webServer.send(200, "text/plain", "1");
+  });
+  webServer.on("/lightsensor", HTTP_GET, []() {
+    
+    lastUpdate = 0;
+    updateSettings = true;
+    webServer.send(200, "text/plain", String(analogRead(LIGHT_SENSOR)));
   });
    
   webServer.on("/cmd", HTTP_GET, []() {

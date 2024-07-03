@@ -136,7 +136,15 @@ void showLightingEffects() {
         avgLight += lightSensorValues[i];
         lightSensorValues[i-1] = lightSensorValues[i];
       }
-      lightSensorValues[AUTOBRIGHTNESS_SAMPLES-1] = analogRead(LIGHT_SENSOR); //set new sample
+
+      /**
+       * set sample
+      */
+      #ifndef LIGHT_SENSOR_INVERT
+      lightSensorValues[AUTOBRIGHTNESS_SAMPLES-1] = analogRead(LIGHT_SENSOR);
+      #else
+      lightSensorValues[AUTOBRIGHTNESS_SAMPLES-1] = 1024-analogRead(LIGHT_SENSOR);
+      #endif
       avgLight += lightSensorValues[AUTOBRIGHTNESS_SAMPLES-1]; //average the past N readings
       
       goalLightValue = (avgLight/AUTOBRIGHTNESS_SAMPLES /1024.0)*2; //Between 0-2
@@ -357,7 +365,14 @@ void render_clock_countdown() {
 
   Serial.printf("\nCountdown %d seconds left", countdown.remaining()/1000);
 
-  render_clock_to_display(((countdown.remaining()/1000)-((countdown.remaining()/1000)%60))/60, (countdown.remaining()/1000)%60, 255 - segmentBrightness);
+  /**
+   * @info: adds one second hack to the display counter
+  */
+  render_clock_to_display(
+    (((countdown.remaining()/1000)+1)-(((countdown.remaining()/1000)+1)%60))/60,
+    ((countdown.remaining()/1000)+1)%60,
+    255 - segmentBrightness
+  );
 }
 void render_clock_to_display(int h, int m) {render_clock_to_display(h, m, 0);}
 void render_clock_to_display(int h, int m, byte dim) {
@@ -1211,7 +1226,11 @@ void defaultSettings(){
   utcOffset = 0;
   setNewOffset();
   for(int i=0 ; i<AUTOBRIGHTNESS_SAMPLES ; i++){
+    #ifndef LIGHT_SENSOR_INVERT
     lightSensorValues[i] = analogRead(LIGHT_SENSOR);
+    #else
+    lightSensorValues[i] = 1024-analogRead(LIGHT_SENSOR);
+    #endif
   }
 }
 
