@@ -3,6 +3,7 @@
 
 #include <FastLED.h>
 #include "Config.h"
+#include "CountDown.h"
 
 #ifdef SPOTLIGHTPIN
 const int PROGMEM NUM_LEDS = LEDS_PER_LINE * (2*WIDTH*HEIGHT + WIDTH + HEIGHT);
@@ -17,6 +18,8 @@ extern int rainbowRate;
 extern int hueOffset;
 extern uint32_t lastUpdate;
 extern bool updateSettings;
+
+extern CountDown countdown;
 
 struct strip {
   int start;

@@ -5,7 +5,7 @@
 #include "Lighting.h"
 #include "NTPTime.h"
 #include "Backlight.h"
-#include "Countdown.h"
+#include "CountDown.h"
 
 ESP8266WebServer webServer(80);
 
@@ -278,7 +278,7 @@ void setupServer(){
     webServer.send(200, "text/plain", "1");
   });
   webServer.on("/countdown", HTTP_GET, []() {
-    startCountdown((int)(webServer.arg("seconds").toInt())%1200);
+    countdown.start(((webServer.arg("seconds").toInt())%1200)*1000);
 
     // Serial.printf("\nStarting countdown via webserver with %d seconds", (int)(webServer.arg("seconds").toInt())%1200);
     

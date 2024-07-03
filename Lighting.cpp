@@ -4,7 +4,7 @@
 #include "Config.h"
 #include "NTPTime.h"
 #include "TimedEffects.h"
-#include "Countdown.h"
+#include "CountDown.h"
 
 CRGB off_color = CRGB::Black;
 CRGB *leds = new CRGB[NUM_LEDS+1]; //array that gets rendered, +1 for sacrifice LED in case its needed
@@ -80,6 +80,8 @@ bool autoEffect = false;
 uint32_t loadingCursorPosition = 0; 
 byte hyphenLength = 0;
 CRGB hyphenColor = CRGB::Black;
+
+CountDown countdown;
 
 strip stripSegment, convert;
 changelist lightingChanges;
@@ -217,14 +219,10 @@ void showLightingEffects() {
         break;
     }
 
-    // if (clockRefreshTimer % FRAMES_PER_SECOND == 0) {
-    //   Serial.printf("\rMod %d minutes and %d seconds", getMinute(), getSecond());
-    // }
-
     /**
      * Render clock time and LED patterns
      */
-    isCountdownActive()?render_clock_countdown():render_clock();
+    (countdown.remaining() > 0)?render_clock_countdown():render_clock();
     
     // Update ntp time every 30 seconds
     if (clockRefreshTimer == FRAMES_PER_SECOND * 30) { updateTime();clockRefreshTimer = 0;}
@@ -336,6 +334,7 @@ void dimSegment(int segment, byte val) {
 //Adds the clock colour data into the leds[] array
 void render_clock() {
 
+  // Serial.println("Rendering clock LEDs...");
   switch (foregroundPattern) {
     case 1:
       render_clock_to_display(getHour(), getMinute(), 255 - segmentBrightness);
@@ -352,25 +351,12 @@ void render_clock() {
   }
 }
 void render_clock_countdown() {
-  if (countdownSecondsLeft < 0) {Serial.println("Countdown expired.");return;};
-  if (countdownSecondsLeft > 1200) {Serial.println("Countdown too large to display in seconds.");return;};
+  if (!countdown.isRunning()) {Serial.println("Countdown expired.");return;};
+  if (countdown.remaining() > 1200*1000) {Serial.println("Countdown too large to display in seconds.");return;};
 
-  Serial.println("Rendering Countdown LEDs...");
+  Serial.printf("\nCountdown %d seconds left", countdown.remaining()/1000);
 
-  // switch (foregroundPattern) {
-  //   case 1:
-      render_clock_to_display((countdownSecondsLeft-(countdownSecondsLeft%60))/60, countdownSecondsLeft%60, 255 - segmentBrightness);
-      // break;
-  //   case 2:
-  //     render_clock_to_display_rainbow(getHour(), getMinute(), 255 - segmentBrightness);
-  //     break;
-  //   case 3:
-  //     render_clock_to_display_gradient(getHour(), getMinute(), 255 - segmentBrightness);
-  //     break;  
-  //   default:
-  //     Serial.println("Invalid LED clock rendering pattern.");
-  //     break;
-  // }
+  render_clock_to_display(((countdown.remaining()/1000)-((countdown.remaining()/1000)%60))/60, (countdown.remaining()/1000)%60, 255 - segmentBrightness);
 }
 void render_clock_to_display(int h, int m) {render_clock_to_display(h, m, 0);}
 void render_clock_to_display(int h, int m, byte dim) {

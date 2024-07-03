@@ -4,7 +4,7 @@
 #include "Lighting.h"
 #include "WebServer.h" 
 #include "Backlight.h"
-#include "Countdown.h"
+#include "CountDown.h"
 
 byte FRAMES_PER_SECOND = 30; //will be overwritten later on by EEPROM or default settings
 unsigned long frameStart; //For fps counter
