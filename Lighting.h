@@ -36,6 +36,7 @@ struct changelist{
   bool h_one_color = false;
   bool m_ten_color = false;
   bool m_one_color = false;
+  bool countdown_color = false;
   bool bg = false;
   bool bg2 = false;
   bool spotlights[WIDTH*HEIGHT];

@@ -16,6 +16,7 @@ CRGB h_ten_color;
 CRGB h_one_color;
 CRGB m_ten_color;
 CRGB m_one_color;
+CRGB countdown_color;
 CRGB bg;
 CRGB bg2;
 
